@@ -12,4 +12,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Ride {
+
+    private Long id;
+
+    private User user;
+    private Driver driver;
+    private Car car;
+
+    private String startLocation;
+    private String endLocation;
+
+    private double price;
 }

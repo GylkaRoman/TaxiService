@@ -11,5 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Rating {
+public class Driver extends User {
+    private String licenceNumber;
+    private boolean available;
+    private double rating;
+
 }

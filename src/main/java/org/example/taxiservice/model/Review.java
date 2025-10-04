@@ -11,5 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Location {
+public class Review {
+    private Long id;
+    private User author;
+    private Driver driver;
+    private int rating;
+    private String comment;
 }
