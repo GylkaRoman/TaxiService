@@ -19,12 +19,4 @@ public class Car {
     private TaxiType taxiType;
 
     private Driver driver;
-
-    public enum TaxiType {
-        STANDART,
-        COMFORT,
-        PREMIUM,
-        BUSINESS,
-        LUXURY
-    }
 }

@@ -15,7 +15,7 @@ public class Ride {
 
     private Long id;
 
-    private User user;
+    private User passenger;
     private Driver driver;
     private Car car;
 

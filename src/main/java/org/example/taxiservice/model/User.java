@@ -28,10 +28,4 @@ public class User {
         if (dateOfBirth == null) return 0;
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
-
-    public enum Role {
-        DRIVER,
-        PASSANGER
-    }
-
 }

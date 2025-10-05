@@ -16,4 +16,6 @@ public class Driver extends User {
     private boolean available;
     private double rating;
 
+    private Car car;
+    private Review review;
 }

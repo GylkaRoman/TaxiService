@@ -17,4 +17,5 @@ public class Review {
     private Driver driver;
     private int rating;
     private String comment;
+    private Ride ride;
 }
