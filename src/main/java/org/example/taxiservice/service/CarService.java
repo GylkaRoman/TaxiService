@@ -9,7 +9,8 @@ import java.util.Optional;
 public interface CarService {
     Car createCar(Car car);
     Optional<Car> getCarById(Long id);
-    List<Car> getAllCars(TaxiType type);
-    Car updateCar(Car Car);
+    List<Car> getAllCars(Car car);
+    List<Car> getAllCarsByType(TaxiType type);
+    Car updateCar(Car car);
     void deleteCar(Long id);
 }
