@@ -1,6 +1,7 @@
 package org.example.taxiservice.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,6 @@ public class Driver extends User {
     private boolean available;
     private double rating;
 
+    @OneToOne
     private Car car;
-    private Review review;
 }

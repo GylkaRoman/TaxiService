@@ -1,6 +1,6 @@
 package org.example.taxiservice.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Car {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String model;
     private String carPlate;
+
+    @Enumerated(EnumType.STRING)
     private TaxiType taxiType;
 
+    @OneToOne(mappedBy = "car")
     private Driver driver;
 }
