@@ -1,16 +1,15 @@
 package org.example.taxiservice.service;
 
-import org.example.taxiservice.model.Driver;
-import org.example.taxiservice.model.Review;
+import org.example.taxiservice.dto.review.ReviewRequestDTO;
+import org.example.taxiservice.dto.review.ReviewResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ReviewService {
-    Review createReview(Review review);
-    Optional<Review> getReviewById(Long id);
-    List<Review> getAllReviews();
-    List<Review> getReviewsByDriver(Driver driver);
-    Review updateReview(Review review);
+    ReviewResponseDTO createReview(ReviewRequestDTO dto);
+    ReviewResponseDTO updateReview(Long id, ReviewRequestDTO dto);
+    ReviewResponseDTO getReviewById(Long id);
+    List<ReviewResponseDTO> getAllReviews();
+    List<ReviewResponseDTO> getReviewsByDriver(Long driverId);
     void deleteReview(Long id);
 }

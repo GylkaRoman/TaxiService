@@ -1,19 +1,17 @@
 package org.example.taxiservice.service;
 
-import org.example.taxiservice.model.Driver;
-import org.example.taxiservice.model.Ride;
-import org.example.taxiservice.model.User;
+import org.example.taxiservice.dto.ride.RideRequestDTO;
+import org.example.taxiservice.dto.ride.RideResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RideService {
-    Ride createRide(Ride ride);
-    Optional<Ride> getRideById(Long id);
-    List<Ride> getAllRides();
-    List<Ride> getAllRidesByDriver(Driver driver);
-    List<Ride> getAllRidesPassenger(User passenger);
-    Ride updateRide(Ride ride);
+    RideResponseDTO createRide(RideRequestDTO dto);
+    RideResponseDTO updateRide(Long id, RideRequestDTO dto);
+    RideResponseDTO getRideById(Long id);
+    List<RideResponseDTO> getAllRides();
+    List<RideResponseDTO> findRidesByDriver(Long driverId);
+    List<RideResponseDTO> findRidesByPassenger(Long passengerId);
     void deleteRide(Long id);
 
 }

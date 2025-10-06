@@ -1,9 +1,9 @@
 package org.example.taxiservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.taxiservice.model.Driver;
-import org.example.taxiservice.model.Ride;
-import org.example.taxiservice.model.User;
+import org.example.taxiservice.dto.ride.RideRequestDTO;
+import org.example.taxiservice.dto.ride.RideResponseDTO;
 import org.example.taxiservice.service.RideService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,45 +18,37 @@ public class RideController {
     private final RideService rideService;
 
     @PostMapping
-    public ResponseEntity<Ride> createRide(@RequestBody Ride ride) {
-        return ResponseEntity.ok(rideService.createRide(ride));
+    public ResponseEntity<RideResponseDTO> createRide(@Valid @RequestBody RideRequestDTO dto) {
+        return ResponseEntity.ok(rideService.createRide(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ride> getRide(@PathVariable Long id) {
-        return rideService.getRideById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<RideResponseDTO> getRide(@PathVariable Long id) {
+        return ResponseEntity.ok(rideService.getRideById(id));
     }
 
     @GetMapping
-    public List<Ride> getAllRides() {
+    public List<RideResponseDTO> getAllRides() {
         return rideService.getAllRides();
     }
 
-    @GetMapping("/driver/{driverId}")
-    public List<Ride> getAllRidesByDriver(@PathVariable Long driverId) {
-        Driver driver = new Driver();
-        driver.setId(driverId);
-        return rideService.getAllRidesByDriver(driver);
-    }
-
-    @GetMapping("/passenger/{userId}")
-    public List<Ride> getAllRidesByPassenger(@PathVariable Long userId) {
-        User passenger = new User();
-        passenger.setId(userId);
-        return rideService.getAllRidesPassenger(passenger);
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<Ride> updateRide(@PathVariable Long id, @RequestBody Ride ride) {
-        ride.setId(id);
-        return ResponseEntity.ok(rideService.updateRide(ride));
+    public ResponseEntity<RideResponseDTO> updateRide(@PathVariable Long id, @Valid @RequestBody RideRequestDTO dto) {
+        return ResponseEntity.ok(rideService.updateRide(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRide(@PathVariable Long id) {
         rideService.deleteRide(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/driver/{driverId}")
+    public List<RideResponseDTO> getRidesByDriver(@PathVariable Long driverId) {
+        return rideService.findRidesByDriver(driverId);
+    }
+
+    @GetMapping("/passenger/{passengerId}")
+    public List<RideResponseDTO> getRidesByPassenger(@PathVariable Long passengerId) {
+        return rideService.findRidesByPassenger(passengerId);
     }
 }

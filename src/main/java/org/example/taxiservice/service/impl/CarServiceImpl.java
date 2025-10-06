@@ -1,6 +1,9 @@
 package org.example.taxiservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.taxiservice.dto.car.CarRequestDTO;
+import org.example.taxiservice.dto.car.CarResponseDTO;
+import org.example.taxiservice.mapper.CarMapper;
 import org.example.taxiservice.model.Car;
 import org.example.taxiservice.model.TaxiType;
 import org.example.taxiservice.repository.CarRepository;
@@ -8,37 +11,52 @@ import org.example.taxiservice.service.CarService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
+
     private final CarRepository carRepository;
+    private final CarMapper carMapper;
 
     @Override
-    public Car createCar(Car car) {
-        return carRepository.save(car);
+    public CarResponseDTO createCar(CarRequestDTO dto) {
+        Car car = carMapper.toEntity(dto);
+        return carMapper.toDTO(carRepository.save(car));
     }
 
     @Override
-    public Optional<Car> getCarById(Long id) {
-        return carRepository.findById(id);
+    public CarResponseDTO updateCar(Long id, CarRequestDTO dto) {
+        Car existing = carRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Car not found: " + id));
+        existing.setModel(dto.getModel());
+        existing.setCarPlate(dto.getCarPlate());
+        existing.setTaxiType(Enum.valueOf(org.example.taxiservice.model.TaxiType.class, dto.getTaxiType()));
+        return carMapper.toDTO(carRepository.save(existing));
     }
 
     @Override
-    public List<Car> getAllCars(Car car) {
-        return carRepository.findAll();
+    public CarResponseDTO getCarById(Long id) {
+        return carRepository.findById(id)
+                .map(carMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Car not found: " + id));
     }
 
     @Override
-    public List<Car> getAllCarsByType(TaxiType type) {
-        return carRepository.findByTaxiType(type);
+    public List<CarResponseDTO> getAllCars() {
+        return carRepository.findAll().stream()
+                .map(carMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Car updateCar(Car car) {
-        return carRepository.save(car);
+    public List<CarResponseDTO> getAllCarsByType(TaxiType taxiType) {
+        return carRepository.findAllByTaxiType(taxiType).stream()
+                .map(carMapper::toDTO)
+                .toList();
     }
+
 
     @Override
     public void deleteCar(Long id) {

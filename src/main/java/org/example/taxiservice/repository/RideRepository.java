@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface RideRepository extends JpaRepository<Ride, Long> {
-    List<Ride> findRidesByDriver(Driver driver);
-    List<Ride> findByPassenger(User passenger);
+    List<Ride> findAllByDriver(Driver driver);
+    List<Ride> findAllByPassenger(User passenger);
 
 }

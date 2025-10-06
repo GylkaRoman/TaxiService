@@ -1,14 +1,14 @@
 package org.example.taxiservice.service;
 
-import org.example.taxiservice.model.User;
+import org.example.taxiservice.dto.user.UserRequestDTO;
+import org.example.taxiservice.dto.user.UserResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
-    User createUser(User user);
-    Optional<User> getUserById(Long id);
-    List<User> getAllUser();
-    User updateUser(User user);
+    UserResponseDTO createUser(UserRequestDTO dto);
+    UserResponseDTO getUserById(Long id);
+    UserResponseDTO updateUser(Long id, UserRequestDTO dto);
+    List<UserResponseDTO> getAllUser();
     void deleteUser(Long id);
 }

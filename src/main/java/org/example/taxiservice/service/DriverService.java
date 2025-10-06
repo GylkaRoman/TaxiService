@@ -1,16 +1,16 @@
 package org.example.taxiservice.service;
 
-import org.example.taxiservice.model.Driver;
+import org.example.taxiservice.dto.driver.DriverRequestDTO;
+import org.example.taxiservice.dto.driver.DriverResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DriverService {
-    Driver createDriver(Driver driver);
-    Optional<Driver> getDriverById(Long id);
-    List<Driver> getAllDrivers();
-    List<Driver> getAllAvailableDrivers();
-    Driver updateDriver(Driver driver);
+    DriverResponseDTO createDriver(DriverRequestDTO dto);
+    DriverResponseDTO updateDriver(Long id, DriverRequestDTO dto);
+    DriverResponseDTO getDriverById(Long id);
+    List<DriverResponseDTO> getAllDrivers();
+    List<DriverResponseDTO> getAvailableDrivers();
     void deleteDriver(Long id);
 
 }

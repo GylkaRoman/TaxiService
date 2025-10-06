@@ -1,16 +1,16 @@
 package org.example.taxiservice.service;
 
-import org.example.taxiservice.model.Car;
+import org.example.taxiservice.dto.car.CarRequestDTO;
+import org.example.taxiservice.dto.car.CarResponseDTO;
 import org.example.taxiservice.model.TaxiType;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CarService {
-    Car createCar(Car car);
-    Optional<Car> getCarById(Long id);
-    List<Car> getAllCars(Car car);
-    List<Car> getAllCarsByType(TaxiType type);
-    Car updateCar(Car car);
+    CarResponseDTO createCar(CarRequestDTO dto);
+    CarResponseDTO updateCar(Long id, CarRequestDTO dto);
+    CarResponseDTO getCarById(Long id);
+    List<CarResponseDTO> getAllCars();
+    List<CarResponseDTO> getAllCarsByType(TaxiType type);
     void deleteCar(Long id);
 }

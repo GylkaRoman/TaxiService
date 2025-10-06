@@ -1,13 +1,14 @@
 package org.example.taxiservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.taxiservice.model.Driver;
-import org.example.taxiservice.model.Review;
+import org.example.taxiservice.dto.review.ReviewRequestDTO;
+import org.example.taxiservice.dto.review.ReviewResponseDTO;
 import org.example.taxiservice.service.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/reviews")
@@ -17,33 +18,28 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody Review review) {
-        return ResponseEntity.ok(reviewService.createReview(review));
+    public ResponseEntity<ReviewResponseDTO> createReview(@RequestBody ReviewRequestDTO dto) {
+        return ResponseEntity.ok(reviewService.createReview(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Review> getReview(@PathVariable Long id) {
-        return reviewService.getReviewById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ReviewResponseDTO> getReview(@PathVariable Long id) {
+        return ResponseEntity.ok(reviewService.getReviewById(id));
     }
 
     @GetMapping
-    public List<Review> getAllReviews() {
+    public List<ReviewResponseDTO> getAllReviews() {
         return reviewService.getAllReviews();
     }
 
     @GetMapping("/driver/{driverId}")
-    public List<Review> getReviewsByDriver(@PathVariable Long driverId) {
-        Driver driver = new Driver();
-        driver.setId(driverId);
-        return reviewService.getReviewsByDriver(driver);
+    public List<ReviewResponseDTO> getReviewsByDriver(@PathVariable Long driverId) {
+        return reviewService.getReviewsByDriver(driverId);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long id, @RequestBody Review review) {
-        review.setId(id);
-        return ResponseEntity.ok(reviewService.updateReview(review));
+    public ResponseEntity<ReviewResponseDTO> updateReview(@PathVariable Long id, @RequestBody ReviewRequestDTO dto) {
+        return ResponseEntity.ok(reviewService.updateReview(id, dto));
     }
 
     @DeleteMapping("/{id}")

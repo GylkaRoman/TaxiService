@@ -1,48 +1,92 @@
 package org.example.taxiservice.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.example.taxiservice.dto.review.ReviewRequestDTO;
+import org.example.taxiservice.dto.review.ReviewResponseDTO;
+import org.example.taxiservice.mapper.ReviewMapper;
 import org.example.taxiservice.model.Driver;
 import org.example.taxiservice.model.Review;
+import org.example.taxiservice.model.Ride;
+import org.example.taxiservice.model.User;
+import org.example.taxiservice.repository.DriverRepository;
 import org.example.taxiservice.repository.ReviewRepository;
+import org.example.taxiservice.repository.RideRepository;
+import org.example.taxiservice.repository.UserRepository;
 import org.example.taxiservice.service.ReviewService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
+
     private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
+    private final DriverRepository driverRepository;
+    private final RideRepository rideRepository;
+    private final ReviewMapper reviewMapper;
 
     @Override
-    public Review createReview(Review review) {
-        return reviewRepository.save(review);
+    public ReviewResponseDTO createReview(ReviewRequestDTO dto) {
+        User author = userRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new RuntimeException("Author not found: " + dto.getAuthorId()));
+        Driver driver = driverRepository.findById(dto.getDriverId())
+                .orElseThrow(() -> new RuntimeException("Driver not found: " + dto.getDriverId()));
+        Ride ride = rideRepository.findById(dto.getRideId())
+                .orElseThrow(() -> new RuntimeException("Ride not found: " + dto.getRideId()));
+
+        Review review = reviewMapper.toEntity(dto, author, driver, ride);
+        return reviewMapper.toDTO(reviewRepository.save(review));
     }
 
     @Override
-    public Optional<Review> getReviewById(Long id) {
-        return reviewRepository.findById(id);
+    public ReviewResponseDTO updateReview(Long id, ReviewRequestDTO dto) {
+        Review existing = reviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Review not found: " + id));
+
+        User author = userRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new RuntimeException("Author not found: " + dto.getAuthorId()));
+        Driver driver = driverRepository.findById(dto.getDriverId())
+                .orElseThrow(() -> new RuntimeException("Driver not found: " + dto.getDriverId()));
+        Ride ride = rideRepository.findById(dto.getRideId())
+                .orElseThrow(() -> new RuntimeException("Ride not found: " + dto.getRideId()));
+
+        existing.setAuthor(author);
+        existing.setDriver(driver);
+        existing.setRide(ride);
+        existing.setRating(dto.getRating());
+        existing.setComment(dto.getComment());
+
+        return reviewMapper.toDTO(reviewRepository.save(existing));
     }
 
     @Override
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
+    public ReviewResponseDTO getReviewById(Long id) {
+        return reviewRepository.findById(id)
+                .map(reviewMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Review not found: " + id));
     }
 
     @Override
-    public List<Review> getReviewsByDriver(Driver driver) {
-        return reviewRepository.findReviewsByDriver(driver);
+    public List<ReviewResponseDTO> getAllReviews() {
+        return reviewRepository.findAll().stream()
+                .map(reviewMapper::toDTO)
+                .toList();
     }
 
     @Override
-    public Review updateReview(Review review) {
-        return reviewRepository.save(review);
+    public List<ReviewResponseDTO> getReviewsByDriver(Long driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new RuntimeException("Driver not found"));
+        return reviewRepository.findAllByDriver(driver)
+                .stream()
+                .map(reviewMapper::toDTO)
+                .toList();
     }
 
     @Override
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
-
     }
 }

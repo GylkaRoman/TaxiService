@@ -1,7 +1,9 @@
 package org.example.taxiservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.taxiservice.model.Car;
+import org.example.taxiservice.dto.car.CarRequestDTO;
+import org.example.taxiservice.dto.car.CarResponseDTO;
 import org.example.taxiservice.model.TaxiType;
 import org.example.taxiservice.service.CarService;
 import org.springframework.http.ResponseEntity;
@@ -17,31 +19,23 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<Car> createCar(@RequestBody Car car) {
-        return ResponseEntity.ok(carService.createCar(car));
+    public ResponseEntity<CarResponseDTO> createCar(@Valid @RequestBody CarRequestDTO dto) {
+        return ResponseEntity.ok(carService.createCar(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Car> getCar(@PathVariable Long id) {
-        return carService.getCarById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CarResponseDTO> getCar(@PathVariable Long id) {
+        return ResponseEntity.ok(carService.getCarById(id));
     }
 
     @GetMapping
-    public List<Car> getAllCars(@PathVariable Car car) {
-        return carService.getAllCars(car);
-    }
-
-    @GetMapping("/type/{type}")
-    public List<Car> getAllCarsByType(@PathVariable TaxiType type) {
-        return carService.getAllCarsByType(type);
+    public List<CarResponseDTO> getAllCars() {
+        return carService.getAllCars();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Car> updateCar(@PathVariable Long id, @RequestBody Car car) {
-        car.setId(id);
-        return ResponseEntity.ok(carService.updateCar(car));
+    public ResponseEntity<CarResponseDTO> updateCar(@PathVariable Long id, @Valid @RequestBody CarRequestDTO dto) {
+        return ResponseEntity.ok(carService.updateCar(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -49,4 +43,9 @@ public class CarController {
         carService.deleteCar(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/type/{taxiType}")
+    public List<CarResponseDTO> getAllCarsByType(@PathVariable TaxiType taxiType) {
+        return carService.getAllCarsByType(taxiType);
+    }
+
 }
