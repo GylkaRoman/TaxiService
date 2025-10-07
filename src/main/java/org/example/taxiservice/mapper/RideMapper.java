@@ -6,7 +6,9 @@ import org.example.taxiservice.model.Car;
 import org.example.taxiservice.model.Driver;
 import org.example.taxiservice.model.Ride;
 import org.example.taxiservice.model.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RideMapper {
     public Ride toEntity(RideRequestDTO dto, User passenger, Driver driver, Car car) {
         if (dto == null) return null;

@@ -6,7 +6,9 @@ import org.example.taxiservice.model.Driver;
 import org.example.taxiservice.model.Review;
 import org.example.taxiservice.model.Ride;
 import org.example.taxiservice.model.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ReviewMapper {
     public Review toEntity(ReviewRequestDTO dto, User author, Driver driver, Ride ride) {
         if (dto == null) return null;
