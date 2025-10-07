@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TaxiServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(TaxiServiceApplication.class, args);
-        System.out.println("🚕 Taxi Service started successfully!");
+        System.out.println("Taxi Service started successfully!");
     }
 }
