@@ -11,7 +11,7 @@ public class CarMapper {
         if (dto == null) return null;
         Car car = new Car();
         car.setModel(dto.getModel());
-        car.setCarPlate(dto.getCarPlate());
+        car.setPlateNumber(dto.getCarPlate());
         car.setTaxiType(Enum.valueOf(org.example.taxiservice.model.TaxiType.class, dto.getTaxiType()));
         return car;
     }
@@ -21,7 +21,7 @@ public class CarMapper {
         CarResponseDTO dto = new CarResponseDTO();
         dto.setId(car.getId());
         dto.setModel(car.getModel());
-        dto.setCarPlate(car.getCarPlate());
+        dto.setCarPlate(car.getPlateNumber());
         dto.setTaxiType(car.getTaxiType().name());
         return dto;
     }

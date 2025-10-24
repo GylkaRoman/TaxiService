@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Car {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String model;
-    private String carPlate;
+
+    private String plateNumber; // 🔹 заменили carPlate → plateNumber
 
     @Enumerated(EnumType.STRING)
     private TaxiType taxiType;

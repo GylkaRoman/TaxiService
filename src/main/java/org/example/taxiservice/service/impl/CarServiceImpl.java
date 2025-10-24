@@ -31,7 +31,7 @@ public class CarServiceImpl implements CarService {
         Car existing = carRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Car not found: " + id));
         existing.setModel(dto.getModel());
-        existing.setCarPlate(dto.getCarPlate());
+        existing.setPlateNumber(dto.getCarPlate());
         existing.setTaxiType(Enum.valueOf(org.example.taxiservice.model.TaxiType.class, dto.getTaxiType()));
         return carMapper.toDTO(carRepository.save(existing));
     }

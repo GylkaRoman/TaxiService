@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface DriverRepository extends JpaRepository<Driver, Long> {
     List<Driver> findAllByAvailableTrue();
     Optional<Driver> findByUsername(String username);
-
+    Optional<Driver> findFirstByAvailableTrue(); // 👈 добавляем сюда
 }
