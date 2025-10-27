@@ -1,7 +1,7 @@
 package org.example.taxiservice.model;
 
 public enum TaxiType {
-    STANDART,
+    STANDARD,
     COMFORT,
     PREMIUM,
     BUSINESS,

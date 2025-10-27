@@ -1,6 +1,7 @@
 package org.example.taxiservice.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +19,6 @@ public class Driver extends User {
     private double rating;
 
     @OneToOne
+    @JoinColumn(name = "car_id")
     private Car car;
 }

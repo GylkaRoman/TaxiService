@@ -1,6 +1,5 @@
 package org.example.taxiservice.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.taxiservice.dto.driver.DriverRequestDTO;
 import org.example.taxiservice.dto.driver.DriverResponseDTO;
@@ -8,6 +7,7 @@ import org.example.taxiservice.service.DriverService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,24 +19,33 @@ public class DriverController {
 
     @PostMapping
     public ResponseEntity<DriverResponseDTO> createDriver(@Valid @RequestBody DriverRequestDTO dto) {
-        return ResponseEntity.ok(driverService.createDriver(dto));
+        DriverResponseDTO driver = driverService.createDriver(dto);
+        return ResponseEntity.ok(driver);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DriverResponseDTO> getDriver(@PathVariable Long id) {
-        return ResponseEntity.ok(driverService.getDriverById(id));
+        DriverResponseDTO driver = driverService.getDriverById(id);
+        return ResponseEntity.ok(driver);
     }
 
     @GetMapping
-    public List<DriverResponseDTO> getAllDrivers() {
-        return driverService.getAllDrivers();
+    public ResponseEntity<List<DriverResponseDTO>> getAllDrivers() {
+        List<DriverResponseDTO> drivers = driverService.getAllDrivers();
+        return ResponseEntity.ok(drivers);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<DriverResponseDTO>> getAvailableDrivers() {
+        List<DriverResponseDTO> drivers = driverService.getAvailableDrivers();
+        return ResponseEntity.ok(drivers);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DriverResponseDTO> updateDriver(
-            @PathVariable Long id,
-            @Valid @RequestBody DriverRequestDTO dto) {
-        return ResponseEntity.ok(driverService.updateDriver(id, dto));
+    public ResponseEntity<DriverResponseDTO> updateDriver(@PathVariable Long id,
+                                                          @Valid @RequestBody DriverRequestDTO dto) {
+        DriverResponseDTO updated = driverService.updateDriver(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
@@ -44,10 +53,4 @@ public class DriverController {
         driverService.deleteDriver(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/available")
-    public List<DriverResponseDTO> getAvailableDrivers() {
-        return driverService.getAvailableDrivers();
-    }
-
 }

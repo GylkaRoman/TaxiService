@@ -1,7 +1,7 @@
 package org.example.taxiservice.dto.user;
 
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -11,6 +11,13 @@ import java.time.LocalDate;
 
 @Data
 public class UserRequestDTO {
+
+    @NotBlank(message = "Username is required")
+    private String username;
+
+    @NotBlank(message = "Password is required")
+    private String password;
+
     @NotBlank(message = "Name cannot be empty")
     private String name;
 

@@ -15,14 +15,12 @@ public class DistanceServiceImpl implements DistanceService {
     private final WebClient webClient = WebClient.create();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // Вспомогательный record для хранения координат
     private record Location(double lat, double lon) {}
 
-    // Получение координат по адресу через Nominatim API
     private Location getCoordinates(String address) throws Exception {
         String url = UriComponentsBuilder
                 .fromUriString("https://nominatim.openstreetmap.org/search")
-                .queryParam("q", address + ", Moldova") // уточняем страну
+                .queryParam("q", address + ", Moldova")
                 .queryParam("format", "json")
                 .queryParam("limit", 1)
                 .build()
@@ -49,13 +47,11 @@ public class DistanceServiceImpl implements DistanceService {
         return new Location(lat, lon);
     }
 
-    // Получение расстояния в км между двумя адресами
     @Override
     public double getDistanceInKm(String from, String to) throws Exception {
         Location locFrom = getCoordinates(from);
         Location locTo = getCoordinates(to);
 
-        // Формируем URL для OSRM с использованием точки как десятичного разделителя
         String routeUrl = String.format(Locale.US,
                 "https://router.project-osrm.org/route/v1/driving/%f,%f;%f,%f?overview=false",
                 locFrom.lon, locFrom.lat, locTo.lon, locTo.lat
@@ -78,6 +74,6 @@ public class DistanceServiceImpl implements DistanceService {
         }
 
         double distanceMeters = root.get("routes").get(0).get("distance").asDouble();
-        return Math.round(distanceMeters / 10.0) / 100.0; // округляем до сотых
+        return Math.round(distanceMeters / 10.0) / 100.0;
     }
 }

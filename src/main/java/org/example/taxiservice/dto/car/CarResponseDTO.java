@@ -6,6 +6,6 @@ import lombok.Data;
 public class CarResponseDTO {
     private Long id;
     private String model;
-    private String carPlate;
+    private String PlateNumber;
     private String taxiType;
 }

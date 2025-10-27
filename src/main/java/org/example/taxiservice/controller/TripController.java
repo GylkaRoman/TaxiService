@@ -27,26 +27,23 @@ public class TripController {
             @RequestParam String from,
             @RequestParam String to,
             @RequestParam TaxiType taxiType,
-            Authentication authentication // 👈 текущий пользователь из токена
+            Authentication authentication
     ) throws Exception {
 
-        // 1️⃣ Получаем пассажира из токена
         String username = authentication.getName();
         User passenger = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 
-        // 2️⃣ Находим случайного доступного водителя
-        Driver driver = driverRepository.findFirstByAvailableTrue()
-                .orElseThrow(() -> new RuntimeException("Нет доступных водителей"));
+        Driver driver = driverRepository.findAllByAvailableTrue().stream()
+                .filter(d -> d.getCar() != null && d.getCar().getTaxiType() == taxiType)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Нет доступных водителей для выбранного типа"));
 
-        // 3️⃣ Берём его машину
         Car car = driver.getCar();
 
-        // 4️⃣ Рассчитываем расстояние и цену
         double distanceKm = distanceService.getDistanceInKm(from, to);
         double fare = fareService.calculateFare(distanceKm, taxiType);
 
-        // 5️⃣ Сохраняем поездку
         Ride ride = Ride.builder()
                 .passenger(passenger)
                 .driver(driver)
@@ -58,7 +55,6 @@ public class TripController {
 
         rideRepository.save(ride);
 
-        // 6️⃣ Возвращаем расширенный ответ
         return Map.of(
                 "rideId", ride.getId(),
                 "from", from,

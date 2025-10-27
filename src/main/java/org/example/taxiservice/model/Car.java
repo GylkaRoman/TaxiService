@@ -19,7 +19,7 @@ public class Car {
 
     private String model;
 
-    private String plateNumber; // 🔹 заменили carPlate → plateNumber
+    private String plateNumber;
 
     @Enumerated(EnumType.STRING)
     private TaxiType taxiType;

@@ -9,10 +9,10 @@ public class FareCalculationServiceImpl implements FareCalculationService {
 
     @Override
     public double calculateFare(double distanceKm, TaxiType type) {
-        double baseRate; // базовая ставка за км
+        double baseRate;
 
         switch (type) {
-            case STANDART -> baseRate = 5.0;
+            case STANDARD -> baseRate = 5.0;
             case COMFORT -> baseRate = 7.5;
             case BUSINESS -> baseRate = 10.0;
             case PREMIUM -> baseRate = 15.0;
@@ -20,7 +20,7 @@ public class FareCalculationServiceImpl implements FareCalculationService {
             default -> baseRate = 5.0;
         }
 
-        double baseFare = 30.0; // стартовая цена
+        double baseFare = 30.0;
         return baseFare + distanceKm * baseRate;
     }
 }

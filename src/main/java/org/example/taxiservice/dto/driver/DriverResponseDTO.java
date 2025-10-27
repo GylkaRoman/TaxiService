@@ -1,6 +1,9 @@
 package org.example.taxiservice.dto.driver;
 
 import lombok.Data;
+import org.example.taxiservice.model.Role;
+
+import java.time.LocalDate;
 
 @Data
 public class DriverResponseDTO {
@@ -12,4 +15,7 @@ public class DriverResponseDTO {
     private boolean available;
     private double rating;
     private Long carId;
+    private String username;
+    private Role role;
+    private LocalDate dateOfBirth;
 }
