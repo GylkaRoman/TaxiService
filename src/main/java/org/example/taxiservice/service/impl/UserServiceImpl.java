@@ -30,7 +30,8 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userMapper.toEntity(dto);
-        user.setPassword(passwordEncoder.encode(dto.getPassword())); //
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRole(Role.PASSENGER); // всегда пассажир
 
         return userMapper.toDTO(userRepository.save(user));
     }
@@ -59,9 +60,8 @@ public class UserServiceImpl implements UserService {
         existing.setPhoneNumber(dto.getPhoneNumber());
         existing.setBalance(dto.getBalance());
         existing.setDateOfBirth(dto.getDateOfBirth());
-        existing.setRole(dto.getRole() != null
-                ? Role.valueOf(dto.getRole().toUpperCase())
-                : existing.getRole());
+
+        existing.setRole(Role.PASSENGER);
 
         return userMapper.toDTO(userRepository.save(existing));
     }

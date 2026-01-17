@@ -2,7 +2,6 @@ package org.example.taxiservice.mapper;
 
 import org.example.taxiservice.dto.driver.DriverRequestDTO;
 import org.example.taxiservice.dto.driver.DriverResponseDTO;
-import org.example.taxiservice.model.Car;
 import org.example.taxiservice.model.Driver;
 import org.example.taxiservice.model.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,23 +16,22 @@ public class DriverMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Driver toEntity(DriverRequestDTO dto, Car car) {
+    public Driver toEntity(DriverRequestDTO dto) {
         if (dto == null) return null;
 
         Driver driver = new Driver();
         driver.setName(dto.getName());
         driver.setSurname(dto.getSurname());
         driver.setPhoneNumber(dto.getPhoneNumber());
-        driver.setLicenceNumber(dto.getLicenceNumber());
-        driver.setAvailable(dto.isAvailable());
-        driver.setRating(dto.getRating());
-        driver.setCar(car);
         driver.setUsername(dto.getUsername());
         driver.setPassword(passwordEncoder.encode(dto.getPassword()));
         driver.setDateOfBirth(dto.getDateOfBirth());
         driver.setRole(Role.DRIVER);
+        driver.setAvailable(false);
+        driver.setRating(0.0);
         return driver;
     }
+
 
     public DriverResponseDTO toDTO(Driver driver) {
         if (driver == null) return null;
@@ -43,13 +41,16 @@ public class DriverMapper {
         dto.setName(driver.getName());
         dto.setSurname(driver.getSurname());
         dto.setPhoneNumber(driver.getPhoneNumber());
-        dto.setLicenceNumber(driver.getLicenceNumber());
-        dto.setAvailable(driver.isAvailable());
-        dto.setRating(driver.getRating());
         dto.setCarId(driver.getCar() != null ? driver.getCar().getId() : null);
         dto.setUsername(driver.getUsername());
         dto.setDateOfBirth(driver.getDateOfBirth());
         dto.setRole(driver.getRole());
+
+
+        dto.setLicenceNumber(driver.getLicenceNumber());
+        dto.setRating(driver.getRating());
+        dto.setAvailable(driver.isAvailable());
+
         return dto;
     }
 

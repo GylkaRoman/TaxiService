@@ -28,7 +28,7 @@ public class DistanceServiceImpl implements DistanceService {
 
         String response = webClient.get()
                 .uri(url)
-                .header("User-Agent", "TaxiService/1.0 (roman.gulica@example.com)")
+                .header("User-Agent", "TaxiService/1.0 (jsdbsv@mail.ru.com)")
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

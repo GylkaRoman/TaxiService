@@ -7,6 +7,7 @@ import org.example.taxiservice.repository.RideRepository;
 import org.example.taxiservice.repository.UserRepository;
 import org.example.taxiservice.service.DistanceService;
 import org.example.taxiservice.service.FareCalculationService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class TripController {
     private final DriverRepository driverRepository;
     private final RideRepository rideRepository;
 
+    @PreAuthorize("hasRole('PASSENGER')")
     @GetMapping("/trip")
     public Map<String, Object> calculateTrip(
             @RequestParam String from,

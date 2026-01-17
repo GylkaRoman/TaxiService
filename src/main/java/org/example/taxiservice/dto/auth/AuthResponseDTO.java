@@ -1,8 +1,11 @@
 package org.example.taxiservice.dto.auth;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class AuthResponseDTO {
-    private String token;
+    private String accessToken;
+    private String refreshToken;
 }

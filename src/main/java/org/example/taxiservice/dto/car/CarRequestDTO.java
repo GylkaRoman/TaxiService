@@ -10,8 +10,10 @@ public class CarRequestDTO {
     private String model;
 
     @NotBlank(message = "Car plate cannot be empty")
-    private String PlateNumber;
+    private String plateNumber;
 
     @NotNull(message = "Taxi type is required")
     private String taxiType;
+
+    private Long driverId;
 }

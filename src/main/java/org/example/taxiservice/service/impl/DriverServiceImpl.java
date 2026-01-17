@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.taxiservice.dto.driver.DriverRequestDTO;
 import org.example.taxiservice.dto.driver.DriverResponseDTO;
 import org.example.taxiservice.mapper.DriverMapper;
-import org.example.taxiservice.model.Car;
 import org.example.taxiservice.model.Driver;
-import org.example.taxiservice.repository.CarRepository;
+import org.example.taxiservice.model.Role;
 import org.example.taxiservice.repository.DriverRepository;
 import org.example.taxiservice.service.DriverService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,20 +21,18 @@ import java.util.stream.Collectors;
 public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
-    private final CarRepository carRepository;
     private final DriverMapper driverMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public DriverResponseDTO createDriver(DriverRequestDTO dto) {
-        Car car = carRepository.findById(dto.getCarId())
-                .orElseThrow(() -> new RuntimeException("Car not found"));
+        Driver driver = driverMapper.toEntity(dto);
+        driver.setRole(Role.DRIVER);
+        driver.setAvailable(false);
+        driver.setRating(0.0);
+        driver.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-        Driver driver = driverMapper.toEntity(dto, car);
-
-        driver = driverRepository.save(driver);
-
-        return driverMapper.toDTO(driver);
+        return driverMapper.toDTO(driverRepository.save(driver));
     }
 
     @Override
@@ -43,19 +40,12 @@ public class DriverServiceImpl implements DriverService {
         Driver driver = driverRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Driver not found"));
 
-        Car car = carRepository.findById(dto.getCarId())
-                .orElseThrow(() -> new RuntimeException("Car not found"));
-
         driver.setName(dto.getName());
         driver.setSurname(dto.getSurname());
         driver.setPhoneNumber(dto.getPhoneNumber());
-        driver.setLicenceNumber(dto.getLicenceNumber());
-        driver.setAvailable(dto.isAvailable());
-        driver.setRating(dto.getRating());
-        driver.setCar(car);
         driver.setUsername(dto.getUsername());
+        driver.setDateOfBirth(dto.getDateOfBirth());
 
-        // Хэшируем пароль при обновлении
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
             driver.setPassword(passwordEncoder.encode(dto.getPassword()));
         }

@@ -6,9 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.taxiservice.model.User;
-import org.example.taxiservice.repository.DriverRepository;
-import org.example.taxiservice.repository.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,8 +21,6 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
-    private final DriverRepository driverRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -40,7 +35,8 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        final String header = request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
+
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -50,31 +46,37 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             Claims claims = jwtUtil.extractClaims(token);
-            String username = claims.getSubject();
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                User foundUser = userRepository.findByUsername(username).orElse(null);
-                if (foundUser == null) {
-                    foundUser = driverRepository.findByUsername(username).orElse(null);
-                }
-
-                if (foundUser != null && !jwtUtil.isTokenExpired(token)) {
-
-                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + foundUser.getRole().name());
-
-                    UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(
-                                    foundUser.getUsername(),
-                                    null,
-                                    List.of(authority)
-                            );
-                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                }
+            if (!"ACCESS".equals(claims.get("type"))) {
+                filterChain.doFilter(request, response);
+                return;
             }
+
+            String username = claims.getSubject();
+            String role = claims.get("role", String.class);
+
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                SimpleGrantedAuthority authority =
+                        new SimpleGrantedAuthority("ROLE_" + role);
+
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                username,
+                                null,
+                                List.of(authority)
+                        );
+
+                auth.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+
         } catch (Exception e) {
-            System.out.println("JWT verification failed: " + e.getMessage());
+
         }
 
         filterChain.doFilter(request, response);
